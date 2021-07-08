@@ -45,7 +45,7 @@ class OauthProvider(object):
             if item['name'] == name:
                 cfg = item
                 break
-        if not cfg:
+        else:
             raise ValueError('No configuration found for: {}'.format(name))
         self.cfg = cfg
         self._get_urls()
@@ -116,7 +116,7 @@ class OauthProvider(object):
         email = self._expand_template('email', args)
         firstname = self._expand_template('firstname', args)
         lastname = self._expand_template('lastname', args)
-        return omename, email, firstname, lastname
+        return omename, email, firstname, lastname, None
 
     def get_userinfo(self, token):
         userinfo_type = self.get('userinfo.type', 'default')
@@ -132,16 +132,23 @@ class OauthProvider(object):
 
     def userinfo_synapse(self, token, userinfo_url):
         decoded = jwt_token_noverify(token['id_token'])
-
-        omename = decoded["user_name"]
-        email = decoded.get("email")
-        firstname = decoded.get("given_name", "")
-        lastname = decoded.get("family_name", "")
-        team = decoded.get("team")
-        if len(team) == 0:
+        teams = decoded.get("team", [])
+        if len(teams) == 0:
             raise OauthException('Required team not found, request membership from your Synapse team manager.')
+        return self._expand_all(decoded)
 
-        return omename, email, firstname, lastname
+    def userinfo_synapse_idp(self, token, userinfo_url):
+        decoded = jwt_token_noverify(token['id_token'])
+        teams = decoded.get("team", [])
+        if len(teams) == 0:
+            raise OauthException('Required team not found, request membership from your Synapse team manager.')
+        userinfo = list(self._expand_all(decoded))
+        # Hard code the team-to-group mapping here. Not ideal.
+        if "3429409" in teams:
+            userinfo[4] = "Ludwig"
+        else:
+            userinfo[4] = "HTAN"
+        return tuple(userinfo)
 
     def userinfo_github(self, token, userinfo_url):
         # Note userinfo_default() will work if the user's email is public
@@ -160,7 +167,7 @@ class OauthProvider(object):
             email = [e for e in emailinfo if e['primary']][0]['email']
         except IndexError:
             email = self._expand_template('email', userinfo)
-        return omename, email, firstname, lastname
+        return omename, email, firstname, lastname, None
 
     def userinfo_orcid(self, token, userinfo_url):
         from xml.etree import ElementTree
@@ -184,7 +191,7 @@ class OauthProvider(object):
             'personal-details:given-names', namespaces).text
         lastname = person.find('personal-details:family-name', namespaces).text
 
-        return omename, email, firstname, lastname
+        return omename, email, firstname, lastname, None
 
     def userinfo_openid(self, token, userinfo_url):
         if self.get('openid.verify'):
@@ -203,4 +210,4 @@ class OauthProvider(object):
             logger.debug('Got openid userinfo %s', userinfo)
             userinfo.update(decoded)
             omename, email, firstname, lastname = self._expand_all(userinfo)
-        return omename, email, firstname, lastname
+        return omename, email, firstname, lastname, None

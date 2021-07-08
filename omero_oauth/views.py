@@ -143,7 +143,7 @@ class OauthCallbackView(WebclientLoginView):
         raise PermissionDenied('POST not allowed')
 
     def get_or_create_account_and_session(self, userinfo):
-        omename, email, firstname, lastname = userinfo
+        omename, email, firstname, lastname, groupname = userinfo
         adminc = create_admin_conn()
         try:
             e = adminc.getObject(
@@ -151,7 +151,7 @@ class OauthCallbackView(WebclientLoginView):
             if e:
                 uid = e.id
             else:
-                gid = self.get_or_create_group(adminc)
+                gid = self.get_or_create_group(adminc, groupname=groupname)
                 uid = self.create_user(
                     adminc, omename, email, firstname, lastname, gid)
             session = create_session_for_user(adminc, omename)
