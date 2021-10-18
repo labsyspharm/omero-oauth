@@ -146,6 +146,8 @@ class OauthProvider(object):
         # Hard code the team-to-group mapping here. Not ideal.
         if "3429409" in teams:
             userinfo[4] = "Ludwig Tissue Atlas"
+        elif "3436622" in teams:
+            userinfo[4] = "Melanoma Collaboration"
         else:
             userinfo[4] = "HTAN"
         return tuple(userinfo)
