@@ -148,6 +148,10 @@ class OauthProvider(object):
             userinfo[4] = "Ludwig Tissue Atlas"
         elif "3436622" in teams:
             userinfo[4] = "Melanoma Collaboration"
+        elif "3443961" in teams:
+            userinfo[4] = "Gray Data Portal"
+        elif "3443962" in teams:
+            userinfo[4] = "Gates Data Portal"
         else:
             userinfo[4] = "HTAN"
         return tuple(userinfo)
