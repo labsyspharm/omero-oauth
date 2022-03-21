@@ -145,7 +145,7 @@ class OauthProvider(object):
         userinfo = list(self._expand_all(decoded))
         # Hard code the team-to-group mapping here. Not ideal.
         if "3429409" in teams:
-            userinfo[4] = "Ludwig Tissue Atlas"
+            userinfo[4] = "Ludwig Tumor Atlas"
         elif "3436622" in teams:
             userinfo[4] = "Melanoma Collaboration"
         elif "3443961" in teams:
