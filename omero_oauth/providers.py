@@ -164,6 +164,8 @@ class OauthProvider(object):
             userinfo[4] = "LSP-RareCyte"
         elif "3448652" in teams:
             userinfo[4] = "Meningioma Project"
+        elif "3449848" in teams:
+            userinfo[4] = "Procode Data Portal"
         else:
             userinfo[4] = "HTAN"
         return tuple(userinfo)
