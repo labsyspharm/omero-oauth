@@ -226,8 +226,7 @@ def error(request, **kwargs):
 
 @login_required()
 @render_response()
-def confirm(request, **kwargs):
-    conn = kwargs['conn']
+def confirm(request, conn=None, **kwargs):
     email = conn.getUser().getEmail()
     try:
         url = parse_url(settings.LOGIN_REDIRECT)
@@ -248,8 +247,7 @@ def confirm(request, **kwargs):
 
 @login_required()
 @render_response()
-def sessiontoken(request, **kwargs):
-    conn = kwargs['conn']
+def sessiontoken(request, conn=None, **kwargs):
     # createUserSession fails with a SecurityViolation
     # create session using sudo instead
     # ss = conn.c.getSession().getSessionService()
