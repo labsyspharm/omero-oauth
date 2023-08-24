@@ -119,4 +119,4 @@ def jwt_token_noverify(id_token):
     :param id_token: The openid id_token returned by the authorisation call
     :return dict: The decoded verified token
     """
-    return jwt.decode(id_token, verify=False)
+    return jwt.decode(id_token, options={"verify_signature": False})
