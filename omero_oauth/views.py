@@ -102,7 +102,7 @@ class OauthCallbackView(WebclientLoginView):
 
     def login_with_session(self, request, session):
         # Based on
-        # https://github.com/openmicroscopy/openmicroscopy/blob/v5.4.10/components/tools/OmeroWeb/omeroweb/webgateway/views.py#L2943
+        # https://github.com/ome/omero-web/blob/v5.22.1/omeroweb/webgateway/views.py#3421 (LoginView.post)
         username = session
         password = session
         server_id = 1
@@ -118,7 +118,7 @@ class OauthCallbackView(WebclientLoginView):
                 userip=get_client_ip(request))
             if conn is not None:
                 try:
-                    request.session['connector'] = connector
+                    connector.to_session(request)
                     # UpgradeCheck URL should be loaded from the server or
                     # loaded omero.web.upgrades.url allows to customize web
                     # only
