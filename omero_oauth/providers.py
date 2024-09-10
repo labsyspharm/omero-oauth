@@ -176,6 +176,8 @@ class OauthProvider(object):
             userinfo[4] = "IDG"
         elif "3500978" in teams:
             userinfo[4] = "PitMap"
+        elif "3514773" in teams:
+            userinfo[4] = "Microdevice"
         else:
             userinfo[4] = "HTAN"
         return tuple(userinfo)
