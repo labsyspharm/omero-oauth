@@ -180,6 +180,8 @@ class OauthProvider(object):
             userinfo[4] = "Microdevice"
         elif "3517661" in teams:
             userinfo[4] = "Squamous Cell Carcinoma"
+        elif "3522946" in teams:
+            userinfo[4] = "PDAC-Metabolics"
         else:
             userinfo[4] = "HTAN"
         return tuple(userinfo)
